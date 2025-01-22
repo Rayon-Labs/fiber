@@ -42,6 +42,12 @@ async def verify_request(
             detail="Oi, invalid signature, you're not who you said you were!",
         )
 
+    if miner_hotkey != config.keypair.ss58_address:
+        raise HTTPException(
+            status_code=401,
+            detail="Oi, invalid miner hotkey - that's not me!",
+        )
+
 
 async def blacklist_low_stake(
     validator_hotkey: str = Header(..., alias=cst.VALIDATOR_HOTKEY), config: Config = Depends(get_config)
