@@ -57,7 +57,6 @@ def _get_nodes_from_neuron_infos(neuron_infos: list[dict]) -> list[models.Node]:
 
 @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=4))
 def _get_nodes_for_uid(substrate: SubstrateInterface, netuid: int, block: int | None = None):
-    # TODO: Add block hash support
 
     if block is not None:
         block_hash = substrate.get_block_hash(block)
