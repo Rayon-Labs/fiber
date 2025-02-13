@@ -1,7 +1,6 @@
-from substrateinterface import SubstrateInterface
+from async_substrate_interface import SubstrateInterface
 
 from fiber import constants as fcst
-from fiber.chain import type_registries
 from fiber.logging_utils import get_logger
 
 logger = get_logger(__name__)
@@ -29,12 +28,10 @@ def get_substrate(
 ) -> SubstrateInterface:
     subtensor_address = _get_chain_endpoint(subtensor_network, subtensor_address)
 
-    type_registry = type_registries.get_type_registry()
     substrate = SubstrateInterface(
         ss58_format=42,
         use_remote_preset=True,
         url=subtensor_address,
-        type_registry=type_registry,
     )
     logger.info(f"Connected to {subtensor_address}")
 

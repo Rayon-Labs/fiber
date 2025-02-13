@@ -11,12 +11,12 @@ async def metagraph_example():
     substrate = interface.get_substrate(subtensor_network="test")
 
     # First option: use the Metagraph class
-    mg = metagraph.Metagraph(substrate=substrate, netuid=176)
+    mg = metagraph.Metagraph(substrate=substrate, netuid=267)
     mg.sync_nodes()
     logger.info(f"Found nodes: {mg.nodes}")
 
     # OR - use the fetch_nodes function [this is better :P]
-    nodes = get_nodes_for_netuid(substrate=substrate, netuid=176)
+    nodes = get_nodes_for_netuid(substrate=substrate, netuid=267)
     logger.info(f"Found nodes: {nodes}")
 
 
