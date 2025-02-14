@@ -2,8 +2,9 @@ import warnings
 from functools import wraps
 from typing import Any, Callable
 
+from async_substrate_interface import SubstrateInterface
 from bittensor_commit_reveal import get_encrypted_commit
-from substrateinterface import Keypair, SubstrateInterface
+from substrateinterface import Keypair
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 from fiber import constants as fcst
@@ -46,7 +47,13 @@ def _normalize_and_quantize_weights(node_ids: list[int], node_weights: list[floa
 def blocks_since_last_update(substrate: SubstrateInterface, netuid: int, node_id: int) -> int:
     substrate, current_block = query_substrate(substrate, "System", "Number", [], return_value=True)
     substrate, last_updated_value = query_substrate(substrate, "SubtensorModule", "LastUpdate", [netuid], return_value=False)
-    updated: int = current_block - last_updated_value[node_id]
+
+    # For some reason, ever since dato, last_updated_value is very inconsistent as to
+    # whether it is a 64 or you need to use .value
+    try:
+        updated: int = current_block - last_updated_value[node_id]
+    except TypeError:
+        updated: int = current_block - last_updated_value[node_id].value
     return updated
 
 
@@ -236,7 +243,7 @@ def _set_weights_with_commit_reveal(
         subnet_reveal_period_epochs=subnet_reveal_period_epochs,
     )
 
-    logger.info(f"Committing weights hash {commit_for_reveal.hex()} for subnet {netuid} with " f"reveal round {reveal_round}...")
+    logger.info(f"Committing weights hash {commit_for_reveal.hex()} for subnet {netuid} with reveal round {reveal_round}...")
     success, error_message = _send_commit_reveal_weights_to_chain(
         substrate,
         keypair,
