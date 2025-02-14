@@ -47,8 +47,9 @@ async def blacklist_low_stake(
 
     node = metagraph.nodes.get(validator_hotkey)
     if not node:
+        logger.error(f"Hotkey {validator_hotkey} not found in metagraph")
         raise HTTPException(status_code=403, detail="Hotkey not found in metagraph")
 
     if node.stake < config.min_stake_threshold:
-        logger.debug(f"Node {validator_hotkey} has insufficient stake of {node.stake} - minimum is {config.min_stake_threshold}")
+        logger.error(f"Node {validator_hotkey} has insufficient stake of {node.stake} - minimum is {config.min_stake_threshold}")
         raise HTTPException(status_code=403, detail=f"Insufficient stake of {node.stake} ")

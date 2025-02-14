@@ -12,5 +12,6 @@ class Config:
     encryption_keys_handler: key_management.EncryptionKeysHandler
     keypair: Keypair
     metagraph: Metagraph
-    min_stake_threshold: float
+    min_stake_threshold: float  | None
     httpx_client: httpx.AsyncClient
+    min_stake_proportion_threshold: float  | None
